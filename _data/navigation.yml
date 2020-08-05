@@ -1,0 +1,11 @@
+header:
+  - title: About
+    url: /about/
+  - title: Projects
+    url: /projects/
+  - title: CV
+    url: /cv/
+#  - title: Ramblings
+#    url: /ramblings/
+  - title: Contact
+    url: /contact/
