@@ -1,6 +1,8 @@
 ---
 layout: article
 title: About
+description: About Ben. Education, hobbies, etc.
+image: /assets/images/avatar.png
 ---
 
 I received my M.Sc. in Computer Science from the University of Calgary, where I worked under the supervision of [Dr. Faramarz Samavati](https://pages.cpsc.ucalgary.ca/~samavati/) in the [GIV](https://giv.cpsc.ucalgary.ca/) research group.

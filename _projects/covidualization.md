@@ -1,6 +1,7 @@
 ---
 layout: project
 title: GIV COVID-19 Visualization
+description: TODO
 cover: /assets/images/covidualization/na.png
 
 article_header:

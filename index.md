@@ -1,6 +1,8 @@
 ---
 layout: article
-title: Benjamin Ulmer
+title: Home
+description: Homepage for benjaminulmer.ca
+image: /assets/images/avatar.png
 ---
 
 The site is currently under construction; more content coming soon.

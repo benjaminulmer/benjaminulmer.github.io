@@ -1,6 +1,7 @@
 ---
 layout: project
 title: Another One Bites the Crust
+description: TODO
 cover: /assets/images/aobtc/fly.png
 
 article_header:

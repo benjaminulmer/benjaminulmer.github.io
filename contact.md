@@ -1,6 +1,7 @@
 ---
 layout: article
 title: Contact
+description: Contact information for Benjamin Ulmer.
 ---
 
 General queries: <contact@benjaminulmer.ca> <br>
