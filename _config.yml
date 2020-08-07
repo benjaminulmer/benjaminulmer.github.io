@@ -16,10 +16,10 @@ highlight_theme: default # "default" (default), "tomorrow", "tomorrow-night", "t
 url     : https://benjaminulmer.ca # the base hostname & protocol for your site e.g. https://www.someone.com
 baseurl : # does not include hostname
 title   : Benjamin Luke Ulmer
+logo    : /assets/logo.png
 tagline : Personal webpage for Benjamin Ulmer
 description: > # this means to ignore newlines
   The personal webpage for Benjamin Luke Ulmer.
-  
 
 
 ## => collections
@@ -35,7 +35,7 @@ collections:
 
 ## => Language and Timezone
 ##############################
-lang: # the language of your site, default as "en"
+lang: en_CA # the language of your site, default as "en"
 timezone: # see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for the available values
 
 
@@ -45,7 +45,7 @@ author:
   type      : # "person" (default), "organization"
   name      : Benjamin Ulmer
   url       :
-  avatar    : /assets/images/avatar.png
+  avatar    : /assets/images/headshot.jpg
   bio       : nothing to see here
   email     : contact@benjaminulmer.ca
   facebook  : # "user_name" the last part of your profile url, e.g. https://www.facebook.com/user_name
@@ -211,16 +211,25 @@ exclude:
 defaults:
   - scope:
       path: ""
-      type: posts
+      type: pages
     values:
+      image: /assets/images/headshot.jpg
       layout: article
       sharing: true
       license: true
       aside:
         toc: true
-      show_edit_on_github: true
-      show_subscribe: true
+      show_edit_on_github: false
+      show_subscribe: false
       pageview: true
+  - scope:
+      path: ""
+      type: projects
+    values:
+      layout: article
+      show_date: false
+      article_header:
+        type: overlay
 
 
 ## => Plugins

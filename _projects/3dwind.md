@@ -1,5 +1,5 @@
 ---
-layout: project
+layout: article
 title: Streamline Visualization of 3D Wind
 description: TODO
 cover: /assets/images/3dwind/cover.png
