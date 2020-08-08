@@ -45,6 +45,11 @@ ISPRS International Journal of Geo-Information, 9(4), 233
 _Toward volume preserving spheroid degenerated-octree grid._
 GeoInformatica, 24, 505-529
 
+## Talks
+GeoIgnite 2019: Canada's National Geospatial Event -- Ottawa, CA <br>
+_June 2019_ <br>
+Talk titled **Volumetric Discrete Global Grid Systems**
+
 ## Courses Taught
 ### Teaching Assistant, University of Calgary
 **CPSC 585: Games Programming** -- Undergraduate <br>
