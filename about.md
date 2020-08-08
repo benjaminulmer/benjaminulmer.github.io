@@ -6,7 +6,7 @@ description: About Ben. Education, hobbies, etc.
 
 I received my M.Sc. in Computer Science from the University of Calgary, where I worked under the supervision of [Dr. Faramarz Samavati](https://pages.cpsc.ucalgary.ca/~samavati/) in the [GIV](https://giv.cpsc.ucalgary.ca/) research group.
 My research focused on the geometric aspects of creating better data structures for 3D geospatial data.
-I also received a B.Sc. in Computer Science from the University of Calgary, with a computer graphics specialization.
+I also received a B.Sc. in Computer Science from the University of Calgary with a specialization in computer graphics.
 
 Prior to my graduate studies, I worked as a gymnastics coach at the Calgary Gymnastics Centre.
 I was also a gymnast myself until the age of fifteen.

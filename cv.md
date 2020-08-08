@@ -2,6 +2,8 @@
 layout: article
 title: Cirriculum Vitae
 description: Cirriculum Vitae (CV) for Benjamin Ulmer.
+aside:
+  toc: true
 ---
 
 ## Education
