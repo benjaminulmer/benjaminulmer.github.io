@@ -29,7 +29,7 @@ _May 2018--May 2019_ <br>
 Awarded by the Natural Sciences and Engineering Research Council of Canada (NSERC)
 
 **Queen Elizabath II Graduate (Master's) Scholarship** <br>
-_September 2013_ <br>
+_September 2017_ <br>
 Awarded by the Government of Alberta
 
 ## Publications

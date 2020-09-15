@@ -1,5 +1,5 @@
 <div>
-  <video muted autoplay loop playsinline style="width: 100%; height: auto;">
+  <video muted autoplay loop playsinline style="width: {{ include.width }}; height: auto; display: block; margin-left: auto; margin-right: auto">
     <source src="{{ include.path }}" type="video/mp4">
   </video>
 </div>

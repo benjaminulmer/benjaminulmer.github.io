@@ -53,7 +53,7 @@ I achieved this by decoupling the physical vehicle model from the rendered one.
 Rotating the rendered vehicle as it corners creates the illusion of instability while keeping the physical vehicle perfectly steady.
 You can see this tilting clearly in the video clip below.
 
-<div>{%- include extensions/video.html path='/assets/videos/aobtc/tilt.mp4' -%}</div>
+<div>{%- include extensions/video.html path='/assets/videos/aobtc/tilt.mp4' width='100%' -%}</div>
 
 Creating this tilt effect is quite straightforward, accomplished with a simple [exponential smoothing](https://en.wikipedia.org/wiki/Exponential_smoothing).
 A tilt angle for the frame is calculated, which is proportional to the vehicle's forward speed and the player's steering input.
@@ -80,9 +80,9 @@ While the AI players for AOBTC are mostly competent, split-screen is definitely 
 
 ### Space Mode
 Like any good video game, AOBTC needed a silly easter egg.
-Entering the [Konami Code](https://en.wikipedia.org/wiki/Konami_Code) activates _space mode_, where the vans are replaced with spaceships and the skybox changes to a star-filled sky.
+Entering the [Konami Code](https://en.wikipedia.org/wiki/Konami_Code) activates _space mode_, where the vans are replaced with spaceships and the skybox changes to a starry night.
 
-<div>{%- include extensions/video.html path='/assets/videos/aobtc/space-1.mp4' -%}</div>
+<div>{%- include extensions/video.html path='/assets/videos/aobtc/space-1.mp4' width='100%' -%}</div>
 
 Besides the obvious changes to the vehicle models and skybox, space mode also modifies the game in the following ways:
 - Gravity is reduced
@@ -93,7 +93,7 @@ The reduced gravity makes the game quite difficult to play, making the vehicles 
 For these reasons, the AI also struggles more than usual in space mode.
 Still, it does allow for some interesting delivery strategies...
 
-<div>{%- include extensions/video.html path='/assets/videos/aobtc/space-2.mp4' -%}</div>
+<div>{%- include extensions/video.html path='/assets/videos/aobtc/space-2.mp4' width='100%' -%}</div>
 
 ## Reflection
 AOBTC was the first large project I worked on in C++.
