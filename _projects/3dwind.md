@@ -18,10 +18,8 @@ This unnamed application was a prototype for creating multiscale visualizations 
 The visualization tool was created as a course project for _CPSC 615: Computational Techniques for Graphics and Visualization_, which I took in the second year of my Master's degree.
 As a prototype, I chose to focus on visualizing wind data for purposes of the project.
 
-
 The application was developed in C++ and OpenGL; Eigen3 and Dear ImGui were used for linear algebra and GUI widgets, respectively.
 Souce code for the project can be viewed [here](https://github.com/benjaminulmer/wind-streamlines).
-
 
 ### Video Demo
 <div>{%- include extensions/youtube.html id='Ym-1vtnu8Ug' -%}</div>
@@ -35,7 +33,6 @@ Information on resolution, coordinate system, etc.
 Streamlines represent a vector field at a snapshot in time, whereas streaklines and pathlines 
 Particle tracing is the process of following the path of a massless particle in a flow field to create a curve that represents the flow characterstics of said field.
 TODO more stuff here.
-
 
 ### Integration
 Calculating field lines requires computing approximate solutions to the initial value problem
@@ -111,8 +108,8 @@ There are four conflicting goals of most streamline visualizations:
 4. **Non-cluttered:** too many streamlines result in a cluttered visualization. This is especially problematic in 3D where occlusion becomes an issue
 
 Creating a seeding algorithm that results in a good balance between the above properties is a non-trivial problem, with much research done in this area.
-For this project, I chose to use the algorithm proposed by [[Jobard and Lefer (1997)](link)].
-The main motivations for using this algorithm were its simplicity and the ease at which it can be extended to multiresolution [[Jobard and Lefer (2001)](link)].
+For this project, I chose to use the algorithm proposed by [Jobard and Lefer (1997)](link).
+The main motivations for using this algorithm were its simplicity and the ease at which it can be extended to multiresolution ([Jobard and Lefer (2001)](link)).
 A brief overview of the algorithm is as follows:
 
 1. Let _L_ be a queue of streamlines
@@ -166,7 +163,7 @@ As mentioned previously, one of the reasons this seeding algorithm was chosen is
 The multiresolution extension works by adding additional streamlines to the output of the base algorithm.
 Using the computed set of streamlines as the queue _L_, steps 3--7 are simply repeated with a smaller separation distance and minimum length.
 For this dataset, I found scaling the separation distance and minimum length by a factor of 0.8 for each successive resolution produced good results.
-In the application, several resolutions of streamlines are calculated as a pre-processing step, and the user can control the number of resolutions displayed during runtime.
+In the application, several resolutions of streamlines are calculated as a pre-processing step; then, the user can control the number of resolutions displayed during runtime.
 
 ### Acceleration
 Recall that the seeding algorithm requires finding the minimum distance between the streamline being integrated and every other streamline computed thus far.
@@ -181,41 +178,105 @@ With the dimensions of the voxels set to the separation distance of the seeding 
 While such a voxel grid is likely not the ideal data structure for the task---especially considering the custom distance metric used---I chose it for its simplicity and ease of implementation.
 
 ## Rendering
-Need to make streamlines look good.
-Colours, shading, animation, etc.
+Regardless of how streamlines are seeded, the rendering of said streamlines has a large impact on the final visualization.
+This is especially pertinent for 3D vector fields, where depth perception, occlusion, and clutter become significant issues that need adressing.
+In this project, I implemented several rendering options for the streamlines to aid the user's perception of key aspects of the data.
 
-### Diffuse and Specular
-All figures thus far have.
-Link paper.
+### Geometry and Illumination
+Streamlines are typically modelled as either simple polylines or full 3D geometry (typically a cylinder).
+3D geometry has well defined surface normals that can be used in typical illumination models; however, this comes at the cost of overhead for calculating and storing the geometry.
+3D geometry also has an absolute thickness (radius of the cylinder), whereas for a multiscale visualization, having streamlines with constant thickness in _screen space_ is much more desireable.
+Alternatively, polylines are a simple and memory minimal representation of streamlines that can easily be rendered with a constant thickness in screen space.
+One drawback with this approach is that lines do not have a single surface normal that can be used for illumination calculations, but rather a plane of possible normals orthogonal to the tangent direction.
+Despite this, it is possible to choose a single normal in a consistent manner that allows illumination models requiring a normal to be applied to the lines. 
+For these reasons---and simplicity---I used polylines for representing streamlines in this project.
+
+To illuminate the streamlines, I used the method proposed by [Zöckler et al. (1996)](), where the normal direction that is coplanar to the light direction is used as the surface normal.
+Using this definition, the values needed for Phong illumination can be calculated from the light, view, and _tangent_ vectors.
+Let $L$ be the light, $V$ the view, $T$ the tangent, $N$ the normal, and $R$ the reflection direction (all pointing away from the surface).
+Using some basic trigonometry, the expressions $N \cdot L$ and $V \cdot R$ can be expressed in terms of $L$, $T$, and $V$:
+
+$$ N \cdot L = \sqrt{1 - \left( L \cdot T \right)^2 } $$
+
+$$ V \cdot R = N \cdot L \sqrt{1 - \left( V \cdot T \right)^2 } - (L \cdot T) (V \cdot T) $$
+
+Refer to the original paper for the derivation of these expressions, although note that they are derived with $L$ pointed _toward_ the surface, which results in a slightly different final result for $V \cdot R$.
+The figures below show streamlines with constant illumination (left), diffuse Lambertian reflection (right), and both diffuse reflection and Phong specular highlights (bottom).
+
+![Streamlines with constant illumination](/assets/images/3dwind/no-illumination.png)
+{: style="float: left; margin-left: auto; margin-right: auto; width: 49.9%; padding-right: 1%;"}
+![Streamlines with diffuse Lambertian reflection](/assets/images/3dwind/diff.png)
+{: style="float: left; margin-left: auto; margin-right: auto; width: 49.9%; padding-left: 1%"}
+![Streamlines with diffuse reflection and Phong specular highlights](/assets/images/3dwind/diff-spec.png)
+{: style="display: block; margin-left: auto; margin-right: auto; width: 50%;"}
 
 ### Altitude
-Scale, colour, and both.
-CIE LAB colour space for colour interpolation.
+Being able to discern the depth and locations of streamlines in 3D space is a significant challenge in these types of visualization.
+In our case, the challenge is amplified by the fact the vertical domain of the dataset is only about 32 km, which means at a global scale, differences in altitude are imperceptible.
+To address this, I implemented two simple effects to highlight the altitude of streamlines, which can be used either independently or together.
+The first method applies a colour scale to the altitude of streamlines; the second scales the altitude of streamlines by some factor.
+Additionally, streamlines can also be given a black outline---sometimes called a halo.
+While this does not directly encode altitude information, it can help with depth perception nonetheless.
+These effects are demonstrated in the images below: just colour scale (top left); just scaling (top right); both colour and scaling (bottom left); and streamline halos (bottom right).
 
-### Streamline Transparency
-Formula.
-Animation based on time.
-
-<div>{%- include extensions/video.html path='/assets/videos/3dwind/global.mp4' width='75%' -%}</div>
-
-Test
-
-<div>{%- include extensions/video.html path='/assets/videos/3dwind/local.mp4' width='75%' -%}</div>
-
-Test
-
-![alt-text](/assets/images/3dwind/cover.png)
+![alt-text](/assets/images/3dwind/color.png)
 {: style="float: left; margin-left: auto; margin-right: auto; width: 49.9%; padding-right: 1%"}
-![alt-text](/assets/images/3dwind/cover.png)
+![alt-text](/assets/images/3dwind/scale.png)
+{: style="float: left; margin-left: auto; margin-right: auto; width: 49.9%; padding-left: 1%"}
+![alt-text](/assets/images/3dwind/both.png)
+{: style="float: left; margin-left: auto; margin-right: auto; width: 49.9%; padding-right: 1%"}
+![alt-text](/assets/images/3dwind/halos.png)
 {: style="float: left; margin-left: auto; margin-right: auto; width: 49.9%; padding-left: 1%"}
 
-Test test tests.
+The colours used for streamlines, the vertical scale factor, and the width of the halos (including no halo) can all be changed dynamically by the user during execution.
+
+### Streamline Tails
+While streamlines are tangent at all points to the flow field, solid lines convey no information about the speed of flow or which direction along the line it goes.
+By adding transparency to parts of streamlines, we can address this issue by creating a tail effect that represents the direction and speed of flow along streamlines.
+The main idea of the method it to simulate particles that travel along the streamline, emitting a haze or smoke as they do.
+The haze fades exponentially as time passes, creating a tail that follows the imaginary particles, indicating their direction and speed.
+The effect also reduces clutter issues, as only a certain percentage of each streamline ends up being visible.
+
+To calculate the transparency for this effect, it is necessary to store the integration time of each point along the streamlines.
+In other words, each point calculated during streamline integration also stores the total accumulated time step in addition to the computed position.
+Let $t$ refer to this integration time.
+Then, the transparency of fragments calculated in the shader is given by
+
+$$\alpha^{-t \mod i},$$
+
+where $i$ is the time interval that spaces particles on the same streamline and $\alpha$ is the percentage of the haze that remains after each time unit.
+This effect creates a series of static particles and trails; however, it can be animated by augmenting the above definition with an accumulator $T$ for the total time that has progressed since starting the application.
+I also added a scale factor $m$ that can be applied to $T$ to affect the speed of the animation.
+Such a scale factor particularly useful for this dataset, as the animation is nearly static at actual speed due to the large integration time covered by a single streamline.
+The updated formula for fragment transparency is
+
+$$\alpha^{\left( T - t \mod i \right) / m}.$$
+
+Like most other rendering parameters, the values of $q$, $m$, and $i$ can all be changed by the user at runtime.
+The starting values are $q = 0.3$, $m = 30\,000$, and $i = 100\,000$, and result in the animations shown in the following two videos.
+
+<div>{%- include extensions/video.html path='/assets/videos/3dwind/global.mp4' width='75%' -%}</div>
+<br>
+<div>{%- include extensions/video.html path='/assets/videos/3dwind/local.mp4' width='75%' -%}</div>
 
 ## Limitations
 Colour not done in shader: requires resending data to GPU.
 Done out out laziness as would require implementing CIE LAB on GPU.
 Multiresolution seeding takes a long time and does not update based on view.
-Uniform voxel grid not ideal for custom distance metric.
+Seeding algorithm doesn't necessarily capture interesting regions.
+I did implement a method for detecting critical points in the flow, but never got around to expanding the seeding algorithm to use them.
+As mentioned, uniform voxel grid not ideal for custom distance metric.
 
 ## Reflection
-Personal reflection on project.
+This application is one of the more recent C++ projects I worked on; it is also one of the largest project I did entirely independently.
+Never worked with vector fields before, learned a lot about sampling, field line integration, stability, etc.
+Despite being course project under tight time constraints, put some effort into making codebase well designed and readible.
+Fell short in many aspects, especially with regards to some best practices for modern C++ that I was only vaguely familiar at the time, but also did an OK job in others.
+
+For the actual visualization, I am happy with how it turned out visually, but am not certain of the effectiveness for actually communicating the underlying data.
+Global scale gives OK sense of overall patterns; smaller scales much less useful.
+Going into the project I was hoping there would be more vertical variation in streamlines, but this is a result of the data, not the method.
+While there is some, generally dwarfed by movement along sphere.
+Still, some interesting streamlines appeared in certain datasets.
+
+I initially wanted to extend this application to other Earth vector fields, such as ocean currents, however finding such datasets proved to be a significant challenge.
