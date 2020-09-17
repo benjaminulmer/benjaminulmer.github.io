@@ -18,7 +18,7 @@ My colaborators on the game were [Gorman Law](https://www.linkedin.com/in/gorman
 
 The game was developed in C++ and OpenGL without the use of any game engine.
 The PhysX physics engine was used for rigid body dynamics and the driving model.
-Source code for the project can be viewed [here](https://github.com/benjaminulmer/bite-the-crust).
+The source code for the project can be viewed [here](https://github.com/benjaminulmer/bite-the-crust).
 
 ### Video Demo
 <div>{%- include extensions/youtube.html id='v8WvPdpNaj8' -%}</div>
