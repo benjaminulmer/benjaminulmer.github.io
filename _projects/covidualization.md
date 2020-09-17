@@ -1,7 +1,7 @@
 ---
 layout: article
 title: GIV COVID-19 Visualization
-description: TODO
+description: Web tool for visualizing COVID-19 data on a virtual globe.
 cover: /assets/images/covidualization/na.png
 
 article_header:
@@ -10,28 +10,14 @@ article_header:
 ---
 <!--more-->
 
-This article is currently under construction; more details coming soon.
-{:.warning}
+This article is a work in progress.
+More details will be added soon.
+{:.info}
 
 ## Overview
-Collaboration with many people in [GIV](https://giv.cpsc.ucalgary.ca) group.
-Some details and the webapp itself can be found [here](https://giv.cpsc.ucalgary.ca/project/covid19-visualization/).
-Here, I'll go into a bit more detail on the pieces I worked on and contributed to.
+This project is a collaboration with many people in [GIV](https://giv.cpsc.ucalgary.ca) group to produce a tool for visualizing and comparing COVID-19 data on a virtual globe.
+Additional details and the webapp itself can be found [here](https://giv.cpsc.ucalgary.ca/project/covid19-visualization/).
+Note that the data used for the app is no longer updated.
 
 ## My Contributions
-Talk about parts of the project I worked on.
-
-### DGGS Sandbox
-Overview of sandbox.
-Exact details of what DGGS is not important.
-Briefly...
-If curious, see [].
-
-My contributions to sandbox.
-
-### Windowing
-
-## Reflection
-Combination of an agile development and typical research environment.
-Got experience collaborating with different subteams in a dev environment e.g. data team was not familiar with how software platform worked.
-Fully remote collaboration.
+Coming soon...

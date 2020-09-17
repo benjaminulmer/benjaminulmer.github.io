@@ -1,7 +1,7 @@
 ---
 layout: article
 title: Streamline Visualization of 3D Wind
-description: TODO
+description: An application for visualizing 3D wind data as streamlines.
 cover: /assets/images/3dwind/cover.png
 
 article_header:

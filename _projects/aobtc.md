@@ -1,7 +1,7 @@
 ---
 layout: article
 title: Another One Bites the Crust
-description: TODO
+description: A pizza delivery driving video game.
 cover: /assets/images/aobtc/fly.png
 
 article_header:
