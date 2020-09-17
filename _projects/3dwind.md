@@ -15,7 +15,7 @@ This article is currently under construction; more details coming soon.
 
 ## Overview
 This unnamed application was a prototype for creating multiscale visualizations of 3D vector Earth data using streamlines.
-The visualization tool was created as a course project for _CPSC 615: Computational Techniques for Graphics and Visualization_, which I took in the second year of my Master's degree.
+I created the visualization tool as a course project for _CPSC 615: Computational Techniques for Graphics and Visualization_, which I took in the second year of my Master's degree.
 As a prototype, I chose to focus on visualizing wind data for purposes of the project.
 
 The application was developed in C++ and OpenGL; Eigen3 and Dear ImGui were used for linear algebra and GUI widgets, respectively.
@@ -26,13 +26,17 @@ Souce code for the project can be viewed [here](https://github.com/benjaminulmer
 
 ### Data Source
 The wind data used in this project was obtained from the [ERA5](https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era5) dataset.
-Information on resolution, coordinate system, etc.
+The data comes sampled on a 0.25 degree latitude-longitude grid with 37 pressure (altitude) levels.
+Pressure levels are represented as a pressure in mbars, which can be converted to an equivalent altitude in meters.
+However, the pressure levels are not uniformly spaced altitudes, with levels near the Earth's surface closer together than those higher in the atmosphere.
+Wind velocity components are represented as m/s East, m/s North, and Pa/s (vertical component).
+I used trilinear interpolation to sample the dataset.
 
 ## Streamlines
-[Streamlines]() are a special type of [field line]() for fluid flow; they are a family of curves that are tangent to the fluid velocity at every point.
-Streamlines represent a vector field at a snapshot in time, whereas streaklines and pathlines 
-Particle tracing is the process of following the path of a massless particle in a flow field to create a curve that represents the flow characterstics of said field.
-TODO more stuff here.
+[Field lines](https://en.wikipedia.org/wiki/Field_line) are the family of curves that are tangent at every point to the vector field they represent.
+Streamlines are simply field lines for flow data, and have long been studied as a method for representing and visualizing flow data.
+Compared to simple glyph-based visualizations, streamlines better represent the continuity of flow and are less prone to visual clutter---though this is still a challenge, especially in 3D.
+For steady flow, streamlines are equivalent to [pathlines and steaklines](https://en.wikipedia.org/wiki/Streamlines,_streaklines,_and_pathlines); however, for unsteady flow, streamlines only represent the data at a single snapshot in time.
 
 ### Integration
 Calculating field lines requires computing approximate solutions to the initial value problem
@@ -66,7 +70,6 @@ These artifacts could be detected and corrected for; however, doing so ended up 
 In addition to the error tolerance, I also specified a maximum step size of 10,000 seconds for each itteration.
 Without such a limit, the step size would occasionally become excessively large in regions of near-constant velocity and not recover.
 Again, this value was chosen through a process of trial and error.
-Finally, (TODO cos(x?) here?)
 
 ### Position Updating
 Runge-Kutta integrators require updating a given position by a vector.
@@ -93,7 +96,7 @@ $$\omega_e = \frac{v_e}{r}.$$
 With angular velocites, spherical positions can be updated directly and Cartesian positions can be updated by rotating about the respective axis.
 For the vertical component, Pa/s are converted to m/s using the International Standard Atmosphere [formula for pressure altitude](https://en.wikipedia.org/wiki/Pressure_altitude):
 
-$$145366.45 \left( 1 - \left( \frac{\mathrm{pressure~in~mbars}}{1013.25} \right)^{0.190284}  \right)$$
+$$145366.45 \left( 1 - \left( \frac{\mathrm{pressure~in~mbars}}{1013.25} \right)^{0.190284}  \right).$$
 
 The result of this formula is in feet, which can be converted to meters by multiplying by 0.3048.
 Pa can be converted to mbars by multiplying by 0.01.
@@ -259,24 +262,35 @@ The starting values are $q = 0.3$, $m = 30\,000$, and $i = 100\,000$, and result
 <br>
 <div>{%- include extensions/video.html path='/assets/videos/3dwind/local.mp4' width='75%' -%}</div>
 
+With adding transparency to the rendering equation, proper depth ordering of render calls is needed to avoid blending artifacts.
+Since most streamlines have relatively little variation in altitude, I simply sort them by their average altitude.
+While this does not eliminate all artifacts, I found it eliminated the vast majority of them and was more than acceptable---especially considering the simplicity of the algorithm.
+
 ## Limitations
-Colour not done in shader: requires resending data to GPU.
-Done out out laziness as would require implementing CIE LAB on GPU.
-Multiresolution seeding takes a long time and does not update based on view.
-Seeding algorithm doesn't necessarily capture interesting regions.
-I did implement a method for detecting critical points in the flow, but never got around to expanding the seeding algorithm to use them.
-As mentioned, uniform voxel grid not ideal for custom distance metric.
+In its current state, the application still has several limitations.
+Some of the limitations are easily addressed; however, others are more fundamental and would require reworking key functionalities.
+
+While nearly all rendering effects for streamlines are calculated in the shaders and controlled by uniforms, colours are stored per vertex and require updating the vertex buffers everytime the user changes the colour settings.
+Calculating the colour of streamlines could be done in the shader, as it is a function only of their altitude, but would require reimplementing the colour scale functionality in GLSL.
+Due to time constraints, I chose to forgo this feature in favour of working on other aspects of the project.
+Similarly, as mentioned previously, the speed of streamline integration could likely be improved with a better space partitioning data structure.
+Doing so would simply be an exercise of implementing and benchmarking different datastructure to see which one(s) work best for the data. 
+
+More fundamental limitations relate to the steamline seeding algorithm used.
+While the multiresolution seeding is a pre-processing step, it is still quite slow and can take several minutes to finish.
+The resolution of steamlines also does not update automatically based on the view, although logic for doing so based on camera parameters could be added.
+Finally, the seeding algorithm does not necessarily capture interesting regions of the flow.
+I did implement a method for detecting critical points in the flow data, but ran out of time before I could incorporate this into the seeding algorithm.
 
 ## Reflection
 This application is one of the more recent C++ projects I worked on; it is also one of the largest project I did entirely independently.
-Never worked with vector fields before, learned a lot about sampling, field line integration, stability, etc.
-Despite being course project under tight time constraints, put some effort into making codebase well designed and readible.
-Fell short in many aspects, especially with regards to some best practices for modern C++ that I was only vaguely familiar at the time, but also did an OK job in others.
+I had never worked with vector fields before, and in the process learned a lot about sampling, Runge-Kutta methods, numerical stability, line rendering and visualization techniques, and different streamline seeding algorithms/approaches.
+Also, despite being a course project under tight time constraints, I tried to put effort into making codebase well designed and readable.
+Looking back now, the code falls short in many aspects---especially with regards to some best practices for modern C++ that I was only vaguely familiar with at the time---although most of the worst offenders could be fixed quite easily.
 
-For the actual visualization, I am happy with how it turned out visually, but am not certain of the effectiveness for actually communicating the underlying data.
-Global scale gives OK sense of overall patterns; smaller scales much less useful.
-Going into the project I was hoping there would be more vertical variation in streamlines, but this is a result of the data, not the method.
-While there is some, generally dwarfed by movement along sphere.
-Still, some interesting streamlines appeared in certain datasets.
-
-I initially wanted to extend this application to other Earth vector fields, such as ocean currents, however finding such datasets proved to be a significant challenge.
+With regards to the resulting visualization, I am happy with how it turned out aesthetically, but I doubt its effectiveness for actually communicating the underlying data.
+At a global scale the streamlines give an sense of the overall patterns; however, the smaller scale views are much less useful.
+Additionally, going into the project, I was hoping there would be more vertical variation in resulting streamlines.
+While there is some, the vertical component of velocity tends to be much less than the surface components, which results in any given streamline having close to constant altitude.
+Still, some interesting streamlines did appear in certain datasets.
+Finally, while I initially planned to extend this application to other Earth vector fields, such as ocean currents, finding such datasets proved to be a significant challenge.
